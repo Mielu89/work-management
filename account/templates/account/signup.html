@@ -1,0 +1,14 @@
+{% extends "account/account_base.html" %}
+{% block content %}
+{% load bootstrap4 %}
+<div class="container">
+  <div class="jumbotron">
+    <form action="{% url "account:signup" %}" method="post">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <input type="submit" class="btn btn-primary" style="float:right" value="Register">
+    </form>
+  </div>
+</div>
+
+{% endblock %}

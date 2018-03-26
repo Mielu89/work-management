@@ -1,0 +1,10 @@
+{% extends "job/job_base.html" %}
+{% block main %}
+
+{% load bootstrap4 %}
+<form class="" action="" method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <input type="submit" class="btn btn-primary btn-sm" name="" value="Edit">
+</form>
+{% endblock %}

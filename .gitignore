@@ -1,0 +1,6 @@
+*.pyc
+secret.py
+migrations/
+.project
+__pycache__/
+.pydevproject

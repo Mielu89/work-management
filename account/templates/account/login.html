@@ -1,0 +1,23 @@
+{% extends "account/account_base.html" %}
+{% load bootstrap4 %}
+
+{% block load %}
+  {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "account/style.css" %}"/>
+{% endblock %}
+
+{% block content%}
+
+  <div class="container my-5 w-50" id="loginContainer">
+    <div class="jumbotron">
+      <form  action="{% url "account:login" %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" class="btn btn-primary btn-sm" name="" value="Log in">
+        <a href="{% url 'account:signup' %}" style="float: right"><button type="button" class="btn btn-primary btn-sm">Sign up!</button></a>
+        <input type="hidden" name="next" value="{% url "index" %}" />
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

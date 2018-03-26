@@ -1,0 +1,25 @@
+#accMenu{
+
+  margin-right: 7%;
+
+}
+
+.nav-link{
+  color: black !important;
+}
+
+.active{
+   background-color: #028090 !important;
+   color: black !important;
+}
+
+.nav-item{
+  background-color: #F0FFE5 !important;
+}
+.navbar{
+  background-color: #F0FFE5 !important;
+}
+
+body{
+  background-color: #003549;
+}

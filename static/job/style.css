@@ -1,0 +1,20 @@
+#map {
+  height: 300px;
+  width: 300;
+}
+
+#adminMenu{
+  z-index: 2;
+  position: fixed;
+  top: 72px;
+  width: 99%;
+}
+
+#sideNav{
+position: sticky;
+top: 129px;
+z-index: 1;
+background-color: #F0FFE5;
+border: 1px solid #e9ecef;
+border-radius: 5px;
+}

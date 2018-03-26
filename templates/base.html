@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+{% load bootstrap4 %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% block load%}{% endblock %}
+
+    <!-- BOOTSTRAP -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!-- main css -->
+      {% load static %}
+      <link rel="stylesheet" href="{% static "master/style.css" %}">
+
+      <!-- google font -->
+      <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <!-- NAVBAR BOOTSTRAP -->
+    <nav class=" navbar navbar-expand-sm navbar-light sticky-top border" >
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == "joblist" %}active{% endif %}" href="{% url 'job:joblist' %}">Work places</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Hours</a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
+        </ul>
+        <!--  start here-->
+            </li>
+          </ul>
+        </div>
+        <div class="navbar-nav" id="accMenu">
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% static "master/glyphicons-4-user.png" %}" alt="Acc"></a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                {% if user.is_authenticated %}
+                  <a class="dropdown-item" href="{% url 'account:logout' %}">Log out</a>
+                  <a class="dropdown-item" href="#">Account</a>
+                  <a class="dropdown-item" href="#">Messages</a>
+                {% else %}
+                  <a class="dropdown-item" href="{% url 'account:login' %}">Log in</a>
+                {% endif %}
+
+              </div>
+      </div>
+      </nav>
+
+      {% block content %}{% endblock %}
+
+  </body>
+</html>
