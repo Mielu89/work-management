@@ -6,7 +6,7 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.utils import timezone
-from strona.secret import mapKey
+from mysite.secret import mapKey
 from . import models
 # Create your views here.
 
