@@ -1,14 +1,17 @@
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy, reverse
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views import generic
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.utils import timezone
+
 from mysite.secret import mapKey
 from . import models
+
 # Create your views here.
+
+EDIT_FIELDS = ['jobNr','city', 'street', 'zip', 'start', 'finish']
+JOB_PARAM = 'jobNr'
 
 class JobDetailView(LoginRequiredMixin, generic.DetailView):
     
@@ -22,7 +25,7 @@ class JobDetailView(LoginRequiredMixin, generic.DetailView):
         return context
     
     def get_object(self):
-        object = get_object_or_404(models.Job, jobNr = self.kwargs['jobNr'])
+        object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
         return object
 
 class JobListView(LoginRequiredMixin, generic.ListView):
@@ -37,21 +40,21 @@ class JobListView(LoginRequiredMixin, generic.ListView):
 class JobEditView(generic.UpdateView):
     model = models.Job
     template_name = 'job/job_edit.html'
-    fields = ['jobNr','city', 'street', 'zip', 'start', 'finish']
+    fields = EDIT_FIELDS
     
     def get_success_url(self):
-        return reverse_lazy('job:jobdetail', kwargs={'jobNr': self.kwargs['jobNr']})
+        return reverse_lazy('job:jobdetail', kwargs={JOB_PARAM: self.kwargs[JOB_PARAM]})
     
     def get_object(self):
         try:
-            object = models.Job.objects.get(jobNr = self.kwargs['jobNr'])
+            object = models.Job.objects.get(jobNr = self.kwargs[JOB_PARAM])
         except:
             return redirect('/job/joblist/')
         return object
     
     def save(self):
-        object = get_object_or_404(models.Job, jobNr = self.kwargs['jobNr'])
-        object.save(save_fields=['jobNr','city', 'street', 'zip', 'start', 'finish'])
+        object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
+        object.save(save_fields=EDIT_FIELDS)
         return object
     
 class JobCreateView():
