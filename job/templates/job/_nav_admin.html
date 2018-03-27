@@ -7,7 +7,7 @@
               <h5 class="my-2 ml-2">Work places:</h5>
             </li>
 
-            {% for item in menu %}
+            {% for item in adminJobMenu %}
               <li class="nav-item text-left">
                 {% if item.text == "New" %}
                   <a class="nav-link {% if request.resolver_match.url_name == "{{item.text}}" %}active{% endif %}" href="/job/{{item.views}}/">{{item.text}}</a>

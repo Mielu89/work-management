@@ -1,6 +1,8 @@
 {% extends "job/job_base.html" %}
 {% block main %}
 
+<h3 class="my-2" style='text-align:center;'>Nr: {{jobEdit.jobNr}}</h3>
+<hr class="my-1">
 {% load bootstrap4 %}
 <form class="" action="" method="post">
   {% csrf_token %}
