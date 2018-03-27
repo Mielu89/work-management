@@ -8,8 +8,13 @@ class JobForm(forms.ModelForm):
         model = Job
         fields = ['jobNr','city', 'street', 'zip', 'start', 'finish']
         widgets = {
-            "start" : forms.SelectDateWidget(empty_label=("Choose Year", "Choose Month", "Choose Day")),
-            "finish": forms.SelectDateWidget(empty_label=("Choose Year", "Choose Month", "Choose Day")),            
+            "start" : forms.SelectDateWidget(empty_label=("Choose Year", 
+                                                          "Choose Month", 
+                                                          "Choose Day")),
+            
+            "finish": forms.SelectDateWidget(empty_label=("Choose Year", 
+                                                          "Choose Month", 
+                                                          "Choose Day")),            
             }
         labels = {
             "start" : "Start Not required",
