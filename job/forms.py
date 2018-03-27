@@ -1,6 +1,7 @@
 from django import forms
 from .models import Job
-from django.contrib.admin.widgets import AdminDateWidget
+
+from django.utils import timezone
 
 class JobForm(forms.ModelForm):  
     class Meta:
@@ -14,3 +15,12 @@ class JobForm(forms.ModelForm):
             "start" : "Start Not required",
             "finish" : "Finish Not required"
             }
+        
+    def clean_finish(self):
+
+        finish = self.cleaned_data.get('finish')
+        start = self.cleaned_data.get('start')
+
+        if finish and not start:
+                raise forms.ValidationError("Type start date before finish")            
+        return finish
