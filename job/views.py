@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,8 +18,9 @@ JOB_PARAM = 'jobNr'
 class MenuMixin(Menu):
     def get_context_data(self, **kwargs):
         context = super(MenuMixin, self).get_context_data(**kwargs)
-        context['menu'] = Menu.objects.get(name = "adminMenu")
+        context['menu'] = Menu.objects.get(name = "adminJobMenu")
         return context
+    
  
 class JobDetailView(LoginRequiredMixin, MenuMixin, generic.DetailView):
     
@@ -74,8 +75,14 @@ class JobEditView(generic.UpdateView):
         object.save(save_fields=EDIT_FIELDS)
         return object
     
-class JobCreateView():
-    pass
+class JobCreateView(generic.CreateView):
+    template_name = "job/job_new.html"
+    fields = EDIT_FIELDS
+    model = models.Job
+    
+    def get_success_url(self):
+        return reverse('job:jobdetail', kwargs={JOB_PARAM: self.request.POST["jobNr"]})
+
 
 class JobDeleteView():
     pass
