@@ -55,9 +55,20 @@ class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):
         
         return context
     
-    def get_queryset(self):
-        return models.Job.objects.filter(finish__isnull = True, start__isnull=False)
-        
+    def get_queryset(self, **kwargs):
+        sort = self.request.GET.get('sort', None)
+        print(sort)
+        if sort:
+            if sort == "all":
+                return models.Job.objects.all()
+            elif sort == "future":
+                return models.Job.objects.filter(start__isnull = True)
+            elif sort == 'complited':
+                return models.Job.objects.filter(finish__isnull = False)
+            elif sort == 'current':
+                return models.Job.objects.filter(start__isnull = False, finish__isnull = True)
+        else: 
+            return models.Job.objects.filter(finish__isnull = True, start__isnull=False)
 
 class JobEditView(generic.UpdateView):
     template_name = 'job/job_edit.html'
