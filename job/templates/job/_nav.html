@@ -2,23 +2,22 @@
 <div class="row">
   <div class="col-12 col-xl-12" id='adminMenu'>
     <div class="container-fluid">
+          <ul class="nav nav-pills nav-fill border" style="background-color: #e3f2fd;">
+            <li class="nav-item text-left">
+              <h5 class="my-2 ml-2">Work places:</h5>
+            </li>
 
-
-      <ul class="nav nav-pills nav-fill border" style="background-color: #e3f2fd;">
-        <li class="nav-item ">
-          <h5 class="my-2">Work places:</h5>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" href="#">New</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" href="{% url 'job:jobedit' jobDetail.jobNr %}">Edit</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" href="#">Delete</a>
-        </li>
-        </ul>
-          </div>
+            {% for item in menu %}
+              <li class="nav-item text-left">
+                {% if item.text == "New" %}
+                  <a class="nav-link {% if request.resolver_match.url_name == "{{item.text}}" %}active{% endif %}" href="/job/{{item.views}}/">{{item.text}}</a>
+                {% else %}
+                  <a class="nav-link {% if request.resolver_match.url_name == "{{item.text}}" %}active{% endif %}" href="/job/{{item.views}}/{{jobNr}}/">{{item.text}}</a>
+                {% endif %}
+              </li>
+            {% endfor %}
+            </ul>
+    </div>
   </div>
 </div>
 {% endif %}

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'account',
     'job',
     'worktime',
+    'menu',
     'bootstrap4',
 ]
 
