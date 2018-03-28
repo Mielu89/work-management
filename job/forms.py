@@ -28,6 +28,7 @@ class JobForm(forms.ModelForm):
 
         if finish and not start:
             raise forms.ValidationError("Type start date before finish")  
-        elif finish < start:
-            raise forms.ValidationError("Finish date can't be earlier then the start date.")
+        if finish:
+            if finish < start:
+                raise forms.ValidationError("Finish date can't be earlier then the start date.")
         return finish

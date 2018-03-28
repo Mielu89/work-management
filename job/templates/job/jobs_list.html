@@ -4,47 +4,11 @@
   <link rel="stylesheet" type="text/css" href="{% static "job/style.css" %}"/>
 
 {% endblock %}
-{% block nav %}{% include 'job/_nav_admin.html'%}{% endblock %}
+
+{% block nav %}{% include "job/_nav_admin.html" %}{% endblock %}
+
 {% block main %}
-<div class="container text-center">
-  <div class="form-check form-check-inline">
-  <form action="{% url "job:joblist"%}" method="GET">
-    <input class="form-check-input select" type="radio" name = "sort" id="inlineRadio1" value="all" {% if activ == "all" %}checked{% endif %}/>
-    <label class="form-check-label mr-5" for="inlineRadio1">All</label>
-    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="future" {% if activ == "future" %}checked{% endif %}/>
-    <label class="form-check-label mr-5" for="inlineRadio1">Future</label>
-    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="complited" {% if activ == "complited" %}checked{% endif %}/>
-    <label class="form-check-label mr-5" for="inlineRadio1">Completed</label>
-    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="current" {% if activ == "current" %}checked{% endif %}/>
-    <label class="form-check-label mr-5" for="inlineRadio1">Current</label>
-    <input type="submit" class="btn btn-primary btn-sm" value="Sort">
-  </form>
-  </div>
-</div>
-<hr class="my-3">
-<table class="table table-striped table-sm">
-  <thead class="thead">
-    <th>Job Nr</th>
-    <th>City</th>
-    <th>Street</th>
-    <th>Started</th>
-    <th>Finished</th>
-    {% if user.is_superuser %}
-      <th>Total hours</th>
-    {% endif %}
-    {% for job in jobList %}
-      <tr>
-        <td><a href="{% url "job:jobdetail" job.jobNr%}">{{job.jobNr}}</a></td>
-        <td>{{job.city}}</td>
-        <td>{{job.street}}</td>
-        <td>{{job.start|date:'d M Y'}}</td>
-        <td>{{job.finish|date:'d M Y'}}</td>
-        {% if user.is_superuser %}
-          <td>{{job.totalHours}}</td>
-        {% endif %}
-      </tr>
-    {% endfor %}
-  </thead>
-</table>
+
+  {% include "job/_jobs_list.html" %}
 
 {% endblock %}

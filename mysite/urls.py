@@ -21,5 +21,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('job/', include('job.urls', namespace='job')),
     path('acc/', include('account.urls', namespace='acc')),
+    path('hours/', include('worktime.urls', namespace="hours")),
     path('admin/', admin.site.urls),
 ]

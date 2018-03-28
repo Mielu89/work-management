@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.db.models import Q
@@ -89,7 +89,7 @@ class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):
             return models.Job.objects.filter(finish__isnull = True, 
                                              start__isnull=False)
         
-class JobEditView(generic.UpdateView):
+class JobEditView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'job/job_edit.html'
     form_class = forms.JobForm
     context_object_name = "jobEdit"     
@@ -103,7 +103,7 @@ class JobEditView(generic.UpdateView):
         object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])     
         return object
        
-class JobCreateView(generic.CreateView):
+class JobCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "job/job_new.html"
     form_class = forms.JobForm
     context_object_name = "jobNew"
@@ -112,7 +112,7 @@ class JobCreateView(generic.CreateView):
         return reverse('job:jobdetail', 
                        kwargs={JOB_PARAM: self.request.POST[JOB_PARAM]})
 
-class JobDeleteView(generic.DeleteView):
+class JobDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Job
     success_url = reverse_lazy('job:joblist')
     template_name = "job/job_delete.html"
@@ -121,6 +121,3 @@ class JobDeleteView(generic.DeleteView):
     def get_object(self):
         object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
         return object
-
-class JobWorkersView():
-    pass
