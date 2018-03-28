@@ -27,5 +27,7 @@ class JobForm(forms.ModelForm):
         start = self.cleaned_data.get('start')
 
         if finish and not start:
-                raise forms.ValidationError("Type start date before finish")            
+            raise forms.ValidationError("Type start date before finish")  
+        elif finish < start:
+            raise forms.ValidationError("Finish date can't be earlier then the start date.")
         return finish

@@ -112,8 +112,15 @@ class JobCreateView(generic.CreateView):
         return reverse('job:jobdetail', 
                        kwargs={JOB_PARAM: self.request.POST[JOB_PARAM]})
 
-class JobDeleteView():
-    pass
+class JobDeleteView(generic.DeleteView):
+    model = models.Job
+    success_url = reverse_lazy('job:joblist')
+    template_name = "job/job_delete.html"
+    context_object_name = "job"
+    
+    def get_object(self):
+        object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
+        return object
 
 class JobWorkersView():
     pass

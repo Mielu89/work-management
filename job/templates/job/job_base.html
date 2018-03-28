@@ -20,7 +20,7 @@
                    <input class="form-control  ml-2" type="search" name="search" placeholder="Nr/Street/ZIP/City" aria-label="Search">
                    <button class="btn btn-outline-primary btn-sm  ml-2" type="submit">Search</button>
                  </form>
-                <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
+                <a class="nav-link {% if request.resolver_match.url_name == "" %}active{% endif %}" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
                 <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
                 <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
               </div>

@@ -1,0 +1,12 @@
+{% extends "job/job_base.html" %}
+
+{% block main %}
+  <form class="" method="POST">
+    {% csrf_token %}
+    <h1 class="text-center">Nr: {{job.jobNr}}</h1>
+    <hr class="my-3">
+    <h5>Do you confirm delete job nr: {{job.jobNr}}?</h5>
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button><button type="button" class="btn btn-primary btn-sm ml-3" name="button"><a style="color: white;" href="{% url "job:joblist" %}">Back</a></button>
+
+  </form>
+{% endblock %}
