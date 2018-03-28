@@ -23,7 +23,6 @@ class MenuMixin(Menu):
         context[ADMIN_JOB_CONTEXT] = Menu.objects.get(name = ADMIN_JOB_CONTEXT)
         return context
     
- 
 class JobDetailView(LoginRequiredMixin, MenuMixin, generic.DetailView):
     
     template_name = 'job/job_detail.html'
@@ -54,7 +53,10 @@ class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):
         
         menu = context[ADMIN_JOB_CONTEXT].item_set.filter(text__in = ["New"])
         context[ADMIN_JOB_CONTEXT] = menu
-        
+      
+        context['activ'] = self.request.GET.get('sort', None)
+        if context['activ'] == None:
+            context['activ'] = 'current'
         return context
     
     def get_queryset(self, **kwargs):
@@ -87,15 +89,15 @@ class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):
             return models.Job.objects.filter(finish__isnull = True, 
                                              start__isnull=False)
         
-
 class JobEditView(generic.UpdateView):
     template_name = 'job/job_edit.html'
     form_class = forms.JobForm
-    context_object_name = "jobEdit"
+    context_object_name = "jobEdit"     
     
     def get_success_url(self):
+        jobNr = self.request.POST.get(JOB_PARAM)
         return reverse_lazy('job:jobdetail', 
-                            kwargs={JOB_PARAM: self.kwargs[JOB_PARAM]})
+                            kwargs={JOB_PARAM: jobNr})
     
     def get_object(self):
         object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])     
@@ -108,8 +110,7 @@ class JobCreateView(generic.CreateView):
     
     def get_success_url(self):
         return reverse('job:jobdetail', 
-                       kwargs={JOB_PARAM: self.request.POST["jobNr"]})
-
+                       kwargs={JOB_PARAM: self.request.POST[JOB_PARAM]})
 
 class JobDeleteView():
     pass

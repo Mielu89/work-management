@@ -22,6 +22,9 @@ class Job(models.Model):
     def totalHours(self):
         return sum([h.totalHours() for h in self.jobworkers.all()])
     
+    class Meta:
+        ordering = ['jobNr']
+    
 class JobWorker(models.Model):
     job = models.ForeignKey(Job, related_name='jobworkers', 
                             on_delete = models.CASCADE)

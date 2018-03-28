@@ -9,13 +9,13 @@
 <div class="container text-center">
   <div class="form-check form-check-inline">
   <form action="{% url "job:joblist"%}" method="GET">
-    <input class="form-check-input select" type="radio" name = "sort" id="inlineRadio1" value="all">
+    <input class="form-check-input select" type="radio" name = "sort" id="inlineRadio1" value="all" {% if activ == "all" %}checked{% endif %}/>
     <label class="form-check-label mr-5" for="inlineRadio1">All</label>
-    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="future">
+    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="future" {% if activ == "future" %}checked{% endif %}/>
     <label class="form-check-label mr-5" for="inlineRadio1">Future</label>
-    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="complited">
+    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="complited" {% if activ == "complited" %}checked{% endif %}/>
     <label class="form-check-label mr-5" for="inlineRadio1">Completed</label>
-    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="current">
+    <input class="form-check-input" type="radio" name = "sort" id="inlineRadio1" value="current" {% if activ == "current" %}checked{% endif %}/>
     <label class="form-check-label mr-5" for="inlineRadio1">Current</label>
     <input type="submit" class="btn btn-primary btn-sm" value="Sort">
   </form>
