@@ -1,8 +1,6 @@
 from django import forms
 from .models import Job
 
-from django.utils import timezone
-
 class JobForm(forms.ModelForm):  
     class Meta:
         model = Job

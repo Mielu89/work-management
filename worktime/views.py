@@ -67,20 +67,17 @@ class MyJobsView(LoginRequiredMixin, generic.ListView):
 class AddHoursView(generic.CreateView):
     template_name = "worktime/addhours.html"
     context_object_name = JOB_PARAM
-#     form_class = AddHoursForm
-    model = WorkTime
-    fields = ('date', 'hours', 'discription')
+    
+    form_class = AddHoursForm
     success_url = reverse_lazy('worktime:myjobs')
+    
      
-    def form_valid(self, form):
-        self.object = form.save(commit = False)
-        job = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
-        jobWorker = models.JobWorker.objects.get_or_create(user = self.request.user,
-                                                           job = job )
-        self.object.jobWorker = jobWorker[0]
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
-         
+    def get_form_kwargs(self):
+        # pass "jobNr" keyword argument with the current url to your form
+        kwargs = super(AddHoursView, self).get_form_kwargs()
+        kwargs['jobNr'] = self.kwargs.pop(JOB_PARAM, None)
+        return kwargs
+
         
         
         
