@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 {% block main %}
+{% if jobNr %}
+  <div class="text-center"><h1>{{jobNr}}</h1></div>
+  <hr class="my-4">
+{% endif %}
 <form class="" action="#" method="post">
   {% csrf_token %}
   {% bootstrap_form form %}

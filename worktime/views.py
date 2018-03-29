@@ -65,20 +65,19 @@ class MyJobsView(LoginRequiredMixin, generic.ListView):
                                             jobworkers__user = user)
             
 class AddHoursView(generic.CreateView):
+    
     template_name = "worktime/addhours.html"
-    context_object_name = JOB_PARAM
-    
+   
     form_class = AddHoursForm
-    success_url = reverse_lazy('worktime:myjobs')
-    
+    success_url = reverse_lazy('worktime:myjobs')  
      
-    def get_form_kwargs(self):
-        # pass "jobNr" keyword argument with the current url to your form
-        kwargs = super(AddHoursView, self).get_form_kwargs()
-        kwargs['jobNr'] = self.kwargs.pop(JOB_PARAM, None)
+    def get_context_data(self, **kwargs):
+        kwargs = super(AddHoursView, self).get_context_data(**kwargs)
+        kwargs['jobNr'] = self.kwargs.get(JOB_PARAM)
         return kwargs
-
-        
-        
-        
-        
+          
+    def get_form_kwargs(self):
+        # pass "jobNr" keyword argument from current url to your form
+        kwargs = super(AddHoursView, self).get_form_kwargs()
+        kwargs['jobNr'] = self.kwargs.get(JOB_PARAM)
+        return kwargs

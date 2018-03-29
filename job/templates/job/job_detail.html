@@ -22,6 +22,7 @@
         {% if user.is_superuser %}
         <strong>Total work hours: </strong>{{jobDetail.totalHours}}
         {% endif %}
+        <p><a href="{% url "worktime:addhours" jobDetail.jobNr %}"><button type="button" class="btn btn-primary btn-sm" name="button">Add hours</button></a></p>
       </div>
       <div class="col-12 col-md-6 my-2">
         <table class="table table-striped table-sm">
@@ -42,7 +43,6 @@
           {% endif %}
           {% endfor %}
         </table>
-        <a href="{% url "worktime:addhours" jobDetail.jobNr %}"><button type="button" class="btn btn-primary btn-sm" name="button">Add hours</button></a>
       </div>
     </div>
       <div class="">

@@ -7,8 +7,9 @@ from django.shortcuts import get_object_or_404
 
 class AddHoursForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        #Add jobworker field from Worktime model if any jobNr pass in url
+    def __init__(self, *args, **kwargs):   
+        #Add jobworker field to from Worktime model if any jobNr pass in url
+        #When in url will be parameter. Job foreignkey will be set by automat.
         self.jobNr = kwargs.pop('jobNr', None)
         super(AddHoursForm, self).__init__(*args, **kwargs)
         if not self.jobNr:
@@ -17,3 +18,9 @@ class AddHoursForm(forms.ModelForm):
     class Meta:
         model = WorkTime
         fields = ['date', 'hours', 'description']
+        
+        widgets = {
+            'date': forms.SelectDateWidget(empty_label=("Choose Year", 
+                                                          "Choose Month", 
+                                                          "Choose Day"))
+            }

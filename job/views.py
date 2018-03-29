@@ -12,7 +12,6 @@ from . import forms
 
 # Create your views here.
 
-EDIT_FIELDS = ['jobNr','city', 'street', 'zip', 'start', 'finish']
 JOB_PARAM = 'jobNr'
 ADMIN_JOB_CONTEXT = 'adminJobMenu'
 JOB_CONTEXT = "JobMenu"

@@ -31,7 +31,6 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == "joblist" %}active{% endif %}" href="{% url 'job:joblist' %}">Work places</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">My Hours</a></li>
           <li class="nav-item"><a class="nav-link" href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
         </ul>
         <!--  start here-->
@@ -63,11 +62,11 @@
           <div class="col-lg-2 ml-2" >
             <div id="sideNav">
               <div class="nav flex-column nav-pills my-5" id="v-pills-tab sideNav" role="tablist" aria-orientation="vertical">
-                <form class="form-inline" action="{% url "job:joblist" %}">
+                <form class="form-inline" action="">
                    <input class="form-control  ml-2" type="search" name="search" placeholder="Nr/Street/ZIP/City" aria-label="Search">
                    <button class="btn btn-outline-primary btn-sm  ml-2" type="submit">Search</button>
                  </form>
-                <a class="nav-link {% if request.resolver_match.url_name == "" %}active{% endif %}"  href="{% url "worktime:myjobs" %}" role="tab" aria-controls="v-pills-profile" aria-selected="false">My jobs</a>
+                <a class="nav-link {% if request.resolver_match.url_name == "myjobs" %}active{% endif %}"  href="{% url "worktime:myjobs" %}" role="tab" aria-controls="v-pills-profile" aria-selected="false">My jobs</a>
                 <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
                 <a class="nav-link {% if request.resolver_match.url_name == "my_view_name" %}active{% endif %}" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
               </div>
