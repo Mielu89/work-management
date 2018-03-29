@@ -73,11 +73,28 @@ class AddHoursView(generic.CreateView):
      
     def get_context_data(self, **kwargs):
         kwargs = super(AddHoursView, self).get_context_data(**kwargs)
-        kwargs['jobNr'] = self.kwargs.get(JOB_PARAM)
+        kwargs[JOB_PARAM] = self.kwargs.get(JOB_PARAM)
         return kwargs
           
     def get_form_kwargs(self):
         # pass "jobNr" keyword argument from current url to your form
         kwargs = super(AddHoursView, self).get_form_kwargs()
-        kwargs['jobNr'] = self.kwargs.get(JOB_PARAM)
+        kwargs[JOB_PARAM] = self.kwargs.get(JOB_PARAM)
         return kwargs
+
+    def form_valid(self, form):
+        self.object = form.save(commit = False)
+        
+        # If url/jobNR take jobNr from URL, if not take from form
+        try:
+            jobNr = self.kwargs[JOB_PARAM]
+        except KeyError:
+            jobNr = form.cleaned_data['jobWorker'].jobNr
+
+        job = models.Job.objects.get(jobNr = jobNr)
+
+        jobWorker = models.JobWorker.objects.get_or_create(job = job,
+                                                    user = self.request.user)
+        self.object.jobWorker = jobWorker[0]
+        self.object.save()
+        return HttpResponseRedirect(reverse('worktime:myjobs'))

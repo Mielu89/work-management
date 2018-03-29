@@ -2,15 +2,14 @@ from django import forms
 from .models import JobWorker, WorkTime
 from job.views import JOB_PARAM
 from job.models import Job
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+
 
 class AddHoursForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):   
         #Add jobworker field to from Worktime model if any jobNr pass in url
         #When in url will be parameter. Job foreignkey will be set by automat.
-        self.jobNr = kwargs.pop('jobNr', None)
+        self.jobNr = kwargs.pop(JOB_PARAM, None)
         super(AddHoursForm, self).__init__(*args, **kwargs)
         if not self.jobNr:
             self.fields['jobWorker'] = forms.ModelChoiceField(queryset=Job.objects.all())
@@ -24,3 +23,21 @@ class AddHoursForm(forms.ModelForm):
                                                           "Choose Month", 
                                                           "Choose Day"))
             }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        date = cleaned_data.get('date')
+        
+        if self.jobNr:
+            jobDate = Job.objects.get(jobNr=self.jobNr)
+            
+        elif not cleaned_data.get('jobWorker').start: 
+            raise forms.ValidationError("Dat work don't start yet")
+                
+        else:
+            jobDate = cleaned_data.get('jobWorker').start
+              
+        if date<jobDate:
+            raise forms.ValidationError("Wrong date")
+        
+        return cleaned_data
