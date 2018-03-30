@@ -42,3 +42,13 @@ class AddHoursForm(forms.ModelForm):
             raise forms.ValidationError("Wrong date")
         
         return cleaned_data
+
+class MyHoursJobEditForm(forms.ModelForm):
+    class Meta:
+        model = WorkTime
+        fields = ('date', 'description', 'hours')
+        widgets = {
+            'date': forms.SelectDateWidget(empty_label=("Choose Year", 
+                                                              "Choose Month", 
+                                                              "Choose Day"))
+            }

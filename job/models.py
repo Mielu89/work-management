@@ -41,4 +41,4 @@ class JobWorker(models.Model):
     
     class Meta:
         unique_together = ('job', 'user')
-        
+        ordering = ['job__jobNr']

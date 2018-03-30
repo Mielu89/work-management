@@ -50,6 +50,7 @@
                   <td>{{ hour.date }}</td>
                   <td>{{ hour.hours }}</td>
                   <td>{{ hour.description }}</td>
+                  <td><a href="{% url "worktime:myjobhours" hour.pk %}">edit</a></td>
                 </tr>
                 {% endfor %}
               </table>

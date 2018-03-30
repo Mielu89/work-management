@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from .forms import AddHoursForm
+from .forms import AddHoursForm, MyHoursJobEditForm
 
 # Create your views here.
 
@@ -150,3 +150,16 @@ class MyHoursView(LoginRequiredMixin, generic.ListView):
             query = self.object.objects.filter(Q(user=user))
             
         return query
+
+class MyHoursJobEditView(LoginRequiredMixin, generic.UpdateView):
+    template_name = 'worktime/job_hours_view.html'
+    context_name_object = "jobHours"
+    form_class = MyHoursJobEditForm
+      
+    def get_object(self, **kwargs):
+        object = get_object_or_404(WorkTime,
+                                   id = self.kwargs["pk"])        
+        return object
+    
+    def get_success_url(self):
+        return reverse('worktime:myhours')
