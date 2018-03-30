@@ -9,4 +9,5 @@ urlpatterns = [
     path('addhours/', views.AddHoursView.as_view(), name='addhours'),
     path('myhours/', views.MyHoursView.as_view(), name='myhours'),
     path('my/<int:pk>/', views.MyHoursJobEditView.as_view(), name='myjobhours'),
+    path('my/delete/<int:pk>/', views.MyHoursJobDeleteView.as_view(), name='deletehour')
     ]

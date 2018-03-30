@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% block main %}
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Are you sure?</p>
+    <input type="submit" class="btn btn-danger btn-sm" value="Delete"/> <a href="{% url "worktime:myhours" %}"><button type="button" class="btn btn-primary btn-sm ml-3">Back</button></a>
+</form>
+{% endblock %}

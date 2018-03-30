@@ -153,13 +153,16 @@ class MyHoursView(LoginRequiredMixin, generic.ListView):
 
 class MyHoursJobEditView(LoginRequiredMixin, generic.UpdateView):
     template_name = 'worktime/job_hours_view.html'
-    context_name_object = "jobHours"
+    context_object_name = "jobHour"
     form_class = MyHoursJobEditForm
-      
-    def get_object(self, **kwargs):
-        object = get_object_or_404(WorkTime,
-                                   id = self.kwargs["pk"])        
-        return object
-    
+    model = WorkTime
+
     def get_success_url(self):
         return reverse('worktime:myhours')
+
+class MyHoursJobDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = 'worktime/deletehours.html'
+    model = WorkTime
+    
+    def get_success_url(self):
+        return reverse_lazy('worktime:myhours')
