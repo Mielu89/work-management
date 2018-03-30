@@ -9,7 +9,7 @@ from .forms import AddHoursForm
 
 # Create your views here.
 
-
+from worktime.forms import JOB_WORKER 
 from job import models
 from job.views import JOB_PARAM
 from .models import WorkTime
@@ -64,7 +64,7 @@ class MyJobsView(LoginRequiredMixin, generic.ListView):
                                             start__isnull = False,
                                             jobworkers__user = user)
             
-class AddHoursView(generic.CreateView):
+class AddHoursView(LoginRequiredMixin, generic.CreateView):
     
     template_name = "worktime/addhours.html"
    
@@ -89,7 +89,7 @@ class AddHoursView(generic.CreateView):
         try:
             jobNr = self.kwargs[JOB_PARAM]
         except KeyError:
-            jobNr = form.cleaned_data['jobWorker'].jobNr
+            jobNr = form.cleaned_data[JOB_WORKER].jobNr
 
         job = models.Job.objects.get(jobNr = jobNr)
 
@@ -98,3 +98,55 @@ class AddHoursView(generic.CreateView):
         self.object.jobWorker = jobWorker[0]
         self.object.save()
         return HttpResponseRedirect(reverse('worktime:myjobs'))
+
+class MyHoursView(LoginRequiredMixin, generic.ListView):
+    
+    template_name = "worktime/my_hours.html"
+    object = models.JobWorker
+    context_object_name = "jobWorkers"
+    
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['activ'] = self.request.GET.get('sort', None)
+        
+        if not context['activ']:
+            context['activ'] = 'all'
+        
+        return context
+    
+    def get_queryset(self):
+        user = self.request.user
+        
+        sort = self.request.GET.get('sort', None)
+        search = self.request.GET.get('search', None)
+        
+        if search:
+            filterArg = (Q(job__zip__iexact = search)| 
+                        Q(job__street__istartswith = search)|
+                        Q(job__city__istartswith = search))
+            try:
+                filterArg |= Q(job__jobNr__iexact = search)
+            except:
+                pass
+            query = self.object.objects.filter(filterArg, 
+                                              user = user)
+            return query
+
+        if sort:
+            if sort == 'all':
+                query = self.object.objects.filter(user=user)
+            elif sort == 'current':
+                query = self.object.objects.filter(user=user,
+                                                   job__start__isnull = False,
+                                                   job__finish__isnull = True)
+            elif sort == 'future':
+                query = self.object.objects.filter(user = user,
+                                                   job__start__isnull = True)
+            elif sort == 'complited':
+                query = self.object.objects.filter(user = user,
+                                                   job__finish__isnull = False)
+            
+        else:
+            query = self.object.objects.filter(Q(user=user))
+            
+        return query

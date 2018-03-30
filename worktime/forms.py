@@ -3,6 +3,7 @@ from .models import JobWorker, WorkTime
 from job.views import JOB_PARAM
 from job.models import Job
 
+JOB_WORKER = 'jobWorker'
 
 class AddHoursForm(forms.ModelForm):
 
@@ -12,7 +13,7 @@ class AddHoursForm(forms.ModelForm):
         self.jobNr = kwargs.pop(JOB_PARAM, None)
         super(AddHoursForm, self).__init__(*args, **kwargs)
         if not self.jobNr:
-            self.fields['jobWorker'] = forms.ModelChoiceField(queryset=Job.objects.all())
+            self.fields[JOB_WORKER] = forms.ModelChoiceField(queryset=Job.objects.all())
 
     class Meta:
         model = WorkTime
@@ -31,11 +32,11 @@ class AddHoursForm(forms.ModelForm):
         if self.jobNr:
             jobDate = Job.objects.get(jobNr=self.jobNr)
             
-        elif not cleaned_data.get('jobWorker').start: 
+        elif not cleaned_data.get(JOB_WORKER).start: 
             raise forms.ValidationError("Dat work don't start yet")
                 
         else:
-            jobDate = cleaned_data.get('jobWorker').start
+            jobDate = cleaned_data.get(JOB_WORKER).start
               
         if date<jobDate:
             raise forms.ValidationError("Wrong date")

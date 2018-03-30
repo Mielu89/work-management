@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from account import views
+from job.views import JobListView
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', JobListView.as_view(), name='index'),
     path('job/', include('job.urls', namespace='job')),
     path('acc/', include('account.urls', namespace='acc')),
     path('hours/', include('worktime.urls', namespace="hours")),
