@@ -27,25 +27,25 @@
         <th>Total hours</th>
       {% endif %}
       </thead>
-      {% for jobWorker in jobWorkers %}
+      {% for myjob in jobWorker %}
         <tr>
-          <td><a href="{% url "job:jobdetail" jobWorker.job.jobNr%}">{{jobWorker.job.jobNr}}</a></td>
-          <td>{{jobWorker.job.city}}</td>
-          <td>{{jobWorker.job.street}}</td>
-          <td>{{jobWorker.job.start|date:'d M Y'}}</td>
-          <td>{{jobWorker.job.finish|date:'d M Y'}}</td>
+          <td><a href="{% url "job:jobdetail" myjob.job.jobNr%}">{{myjob.job.jobNr}}</a></td>
+          <td>{{myjob.job.city}}</td>
+          <td>{{myjob.job.street}}</td>
+          <td>{{myjob.job.start|date:'d M Y'}}</td>
+          <td>{{myjob.job.finish|date:'d M Y'}}</td>
           {% if user.is_superuser %}
-            <td>{{jobWorker.job.totalHours}}</td>
+            <td>{{myjob.job.totalHours}}</td>
           {% endif %}
         </tr>
         <tr >
           <td colspan="6">
             <div class="container">
               <div class="container text-center">
-                <a href="{% url "worktime:addhours" jobWorker.job.jobNr %}"><button class="btn btn-primary btn-sm">Add Hours</button></a>
+                <a href="{% url "worktime:addhours" myjob.job.jobNr %}"><button class="btn btn-primary btn-sm">Add Hours</button></a>
               </div>
               <table class="table table-striped table-sm">
-                {% for hour in jobWorker.time.all %}
+                {% for hour in myjob.time.all %}
                 <tr>
                   <td>{{ hour.date }}</td>
                   <td>{{ hour.hours }}</td>

@@ -30,7 +30,7 @@ class AddHoursForm(forms.ModelForm):
         date = cleaned_data.get('date')
         
         if self.jobNr:
-            jobDate = Job.objects.get(jobNr=self.jobNr)
+            jobDate = Job.objects.get(jobNr=self.jobNr).start
             
         elif not cleaned_data.get(JOB_WORKER).start: 
             raise forms.ValidationError("Dat work don't start yet")

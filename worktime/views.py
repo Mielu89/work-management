@@ -3,10 +3,10 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from .forms import AddHoursForm, MyHoursJobEditForm
-
+from django.contrib.auth.models import User
 # Create your views here.
 
 from worktime.forms import JOB_WORKER 
@@ -103,7 +103,7 @@ class MyHoursView(LoginRequiredMixin, generic.ListView):
     
     template_name = "worktime/my_hours.html"
     object = models.JobWorker
-    context_object_name = "jobWorkers"
+    context_object_name = "jobWorker"
     
     def get_context_data(self):
         context = super().get_context_data()
@@ -114,9 +114,10 @@ class MyHoursView(LoginRequiredMixin, generic.ListView):
         
         return context
     
-    def get_queryset(self):
-        user = self.request.user
+    def get_queryset(self, user = None):
         
+        if not user: user = self.request.user
+              
         sort = self.request.GET.get('sort', None)
         search = self.request.GET.get('search', None)
         
@@ -166,3 +167,22 @@ class MyHoursJobDeleteView(LoginRequiredMixin, generic.DeleteView):
     
     def get_success_url(self):
         return reverse_lazy('worktime:myhours')
+    
+class EmployeesView(UserPassesTestMixin, generic.ListView):
+    
+    template_name = 'worktime/employee.html'
+    model = User
+    context_object_name = "jobWorkers"
+    
+    def test_func(self):
+        return self.request.user.is_superuser
+    
+    def get_queryset(self):
+        query = self.model.objects.all().order_by('first_name')
+        return query
+    
+class EmployeeHoursView(MyHoursView):
+    def get_queryset(self, **kwargs):
+        user = User.objects.get(id = self.kwargs['pk'])
+        query = super().get_queryset(user)
+        return query

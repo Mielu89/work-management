@@ -34,7 +34,7 @@
           </thead>
           {% for worker in jobDetail.jobworkers.all %}
           <tr>
-            <td><a href="#"><strong>{{worker}}</strong></a></td>
+            <td><a href="{% url "worktime:employeehours" pk=worker.user.id %}"><strong>{{worker}}</strong></a></td>
           {% if user.is_superuser %}
           <td>
             <strong>{{worker.totalHours}}</strong>
@@ -58,18 +58,21 @@
         <thead class="thead">
           <th><strong>Date</strong></th>
           <th><strong>Hours</strong></th>
-          <th><strong>Discription</strong></th>
-        <!-- </thead>
-          {% for worker in jobDetail.jobworkers.all %}
-            {% for hour in worker.jobHours %}
+          <th><strong>Description</strong></th>
+          <th></th>
+        </thead>
+          {% for hours in myHours %}
+            {% for hour in hours.time.all %}
               <tr>
+                <td>{{hour.date}}</td>
                 <td>{{hour}}</td>
-                <td>{{hour}}</td>
-                <td>worker</td>
+                <td>{{hour.description}}</td>
+                <td><a href="{% url "worktime:myjobhours" pk=hour.id %}">edit</a>
+                </td>
               </tr>
             {% endfor %}
           {% endfor %}
-      </table> -->
+      </table>
     </div>
 
 {% endblock %}

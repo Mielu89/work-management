@@ -35,6 +35,8 @@ class JobDetailView(LoginRequiredMixin, MenuMixin, generic.DetailView):
         context.update({'key': mapKey})
         
         context[ADMIN_JOB_CONTEXT] = context[ADMIN_JOB_CONTEXT].item_set.filter(text__in = ["Edit","New", "Delete"])
+        user = self.request.user
+        context['myHours'] = user.userjobs.filter(job = self.object)
         
         return context
     
