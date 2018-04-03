@@ -22,7 +22,13 @@ class MenuMixin(Menu):
         context[ADMIN_JOB_CONTEXT] = Menu.objects.get(name = ADMIN_JOB_CONTEXT)
         return context
     
-class JobDetailView(LoginRequiredMixin, MenuMixin, generic.DetailView):
+class JobParamMixin(object):
+    
+    def get_object(self):
+        object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
+        return object
+    
+class JobDetailView(LoginRequiredMixin, MenuMixin, JobParamMixin, generic.DetailView):
     
     template_name = 'job/job_detail.html'
     model = models.Job
@@ -39,10 +45,6 @@ class JobDetailView(LoginRequiredMixin, MenuMixin, generic.DetailView):
         context['myHours'] = user.userjobs.filter(job = self.object)
         
         return context
-    
-    def get_object(self):
-        object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
-        return object
 
 class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):
     template_name = 'job/jobs_list.html'
@@ -90,7 +92,7 @@ class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):
             return models.Job.objects.filter(finish__isnull = True, 
                                              start__isnull=False)
         
-class JobEditView(LoginRequiredMixin, generic.UpdateView):
+class JobEditView(LoginRequiredMixin, JobParamMixin, generic.UpdateView):
     template_name = 'job/job_edit.html'
     form_class = forms.JobForm
     context_object_name = "jobEdit"     
@@ -99,10 +101,6 @@ class JobEditView(LoginRequiredMixin, generic.UpdateView):
         jobNr = self.request.POST.get(JOB_PARAM)
         return reverse_lazy('job:jobdetail', 
                             kwargs={JOB_PARAM: jobNr})
-    
-    def get_object(self):
-        object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])     
-        return object
        
 class JobCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "job/job_new.html"
@@ -113,12 +111,8 @@ class JobCreateView(LoginRequiredMixin, generic.CreateView):
         return reverse('job:jobdetail', 
                        kwargs={JOB_PARAM: self.request.POST[JOB_PARAM]})
 
-class JobDeleteView(LoginRequiredMixin, generic.DeleteView):
+class JobDeleteView(LoginRequiredMixin, JobParamMixin, generic.DeleteView):
     model = models.Job
     success_url = reverse_lazy('job:joblist')
     template_name = "job/job_delete.html"
     context_object_name = "job"
-    
-    def get_object(self):
-        object = get_object_or_404(models.Job, jobNr = self.kwargs[JOB_PARAM])
-        return object
