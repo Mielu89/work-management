@@ -77,7 +77,7 @@ class AddHoursView(LoginRequiredMixin, generic.CreateView):
         return kwargs
           
     def get_form_kwargs(self):
-        # pass "jobNr" keyword argument from current url to your form
+        # pass "jobNr" keyword argument from current url to form
         kwargs = super(AddHoursView, self).get_form_kwargs()
         kwargs[JOB_PARAM] = self.kwargs.get(JOB_PARAM)
         return kwargs
