@@ -15,6 +15,7 @@ class JobForm(forms.ModelForm):
                                                           "Choose Day")),            
             }
         labels = {
+            "jobNr" : "Job numer",
             "start" : "Start Not required",
             "finish" : "Finish Not required"
             }
@@ -23,7 +24,6 @@ class JobForm(forms.ModelForm):
 
         finish = self.cleaned_data.get('finish')
         start = self.cleaned_data.get('start')
-
         if finish and not start:
             raise forms.ValidationError("Type start date before finish")  
         if finish:
