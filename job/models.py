@@ -33,7 +33,8 @@ class JobWorker(models.Model):
     
     
     def __str__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+        return self.user.first_name + ' ' + self.user.last_name + \
+                                ' job numer: '+ str(self.job.jobNr)
             
     def totalHours(self):
         return sum([h.hours for h in self.time.all()])
