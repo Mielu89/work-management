@@ -4,3 +4,4 @@ migrations/
 .project
 __pycache__/
 .pydevproject
+db.sqlite3
