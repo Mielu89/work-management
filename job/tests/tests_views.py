@@ -193,3 +193,73 @@ class JobDetailViewTest(JobViewsSetUp, TestCase):
                           self.user1.userjobs.filter(job = job)[0])
         self.assertEquals(len(resp.context['myHours']), 1)
         
+class JobEditViewTest(JobViewsSetUp, TestCase):
+    
+    def test_redirect_for_user_not_login(self):
+        
+        resp = self.client.get(reverse('job:jobedit', kwargs={'jobNr': 0}))
+        self.assertRedirects(resp, '/acc/login/?next=/job/edit/0/')
+    
+    def test_correct_termplate(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.get(reverse('job:jobedit', kwargs = {'jobNr': 0}))
+        self.assertTemplateUsed(resp, 'job/job_edit.html')
+        
+    def test_succes_url(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+         
+        resp = self.client.post(reverse('job:jobedit', kwargs={'jobNr':0}),
+                                {'jobNr': 0, 
+                                 'city': '0', 
+                                 'street': '0',
+                                 'zip': '0'
+                                 })
+        self.assertRedirects(resp, reverse('job:jobdetail', 
+                                           kwargs={'jobNr': 0}))
+        
+    def test_editing_fields_for_job_model(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        
+        resp = self.client.post(reverse('job:jobedit', kwargs={'jobNr': 0}),
+                                {'jobNr': 1, 
+                                 'city': '1', 
+                                 'street': '1',
+                                 'zip': '1'
+                                 })
+        job = Job.objects.all()[0]
+        self.assertEquals(job.jobNr, 1)
+        self.assertEquals(job.city, '1')
+        self.assertEquals(job.street, '1')
+        self.assertEquals(job.zip, '1')
+        
+    def test_edit_job_add_start_date(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        
+        resp = self.client.post(reverse('job:jobedit', kwargs={'jobNr': 0}),
+                                {'jobNr': 1, 
+                                 'city': '1', 
+                                 'street': '1',
+                                 'zip': '1',
+                                 'start':  datetime.date(2005, 7, 14)
+                                 })
+        job = Job.objects.all()[0]
+        self.assertEquals(job.start, datetime.date(2005, 7, 14))
+        
+    def test_edit_job_add_start_and_finish_date(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        
+        resp = self.client.post(reverse('job:jobedit', kwargs={'jobNr': 0}),
+                                {'jobNr': 1, 
+                                 'city': '1', 
+                                 'street': '1',
+                                 'zip': '1',
+                                 'start':  datetime.date(2005, 7, 14),
+                                 'finish': datetime.date(2005, 7, 15)
+                                 })
+        job = Job.objects.all()[0]
+        self.assertEquals(job.finish, datetime.date(2005, 7, 15))
