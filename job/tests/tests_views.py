@@ -9,6 +9,7 @@ from job.models import Job, JobWorker
 from worktime.models import WorkTime
 from job.views import ADMIN_JOB_CONTEXT, JOB_PARAM
 from mysite.secret import mapKey
+from django.shortcuts import redirect
 
 class JobViewsSetUp():
     
@@ -199,7 +200,7 @@ class JobEditViewTest(JobViewsSetUp, TestCase):
         
         resp = self.client.get(reverse('job:jobedit', kwargs={'jobNr': 0}))
         self.assertRedirects(resp, '/acc/login/?next=/job/edit/0/')
-    
+
     def test_correct_termplate(self):
         
         self.client.login(username = 'user1', password = '12345')
@@ -263,3 +264,72 @@ class JobEditViewTest(JobViewsSetUp, TestCase):
                                  })
         job = Job.objects.all()[0]
         self.assertEquals(job.finish, datetime.date(2005, 7, 15))
+
+class JobCreateViewTest(JobViewsSetUp, TestCase):
+    
+    def test_redirect_if_user_not_login(self):
+        
+        resp = self.client.get(reverse('job:jobnew'))
+        self.assertRedirects(resp, '/acc/login/?next=/job/new/')
+    
+    def test_corret_template(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.get(reverse('job:jobnew'))
+        
+        self.assertEquals(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'job/job_new.html')
+        
+    def test_create_new_job_object(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.post(reverse('job:jobnew'),
+                                {
+                                'jobNr': 1,
+                                'city': 'city',
+                                'street': 'street',
+                                'zip': '00-000'
+                                })
+        job = Job.objects.filter(jobNr = 1, city = 'city', street = 'street',
+                                 zip = '00-000')
+        self.assertEquals(len(job), 1)
+        self.assertEquals(job[0].jobNr, 1)
+        
+    def test_success_url_after_create_new_job_object(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.post(reverse('job:jobnew'),
+                                {
+                                'jobNr': 1,
+                                'city': 'city',
+                                'street': 'street',
+                                'zip': '00-000'
+                                })
+        self.assertRedirects(resp, reverse('job:jobdetail', kwargs={'jobNr': 1}))
+
+class JobDeleteViewTest(JobViewsSetUp, TestCase):
+    
+    def test_redirect_if_user_is_not_login(self):
+        
+        resp = self.client.get(reverse('job:jobdelete', kwargs = {'jobNr': 0}))
+        self.assertRedirects(resp, '/acc/login/?next=/job/delete/0/')
+        
+    def test_correct_template(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.get(reverse('job:jobdelete', kwargs = {'jobNr': 0}))
+        self.assertEquals(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'job/job_delete.html')
+        
+    def test_delete_get_request(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.get(reverse('job:jobdelete', kwargs = {'jobNr': 0}))
+        self.assertContains(resp, 'Do you confirm delete job nr: ')
+    
+    def test_redirect_success_delete_object_job(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.post(reverse('job:jobdelete', kwargs = {'jobNr': 0}))
+        self.assertRedirects(resp, reverse('job:joblist'), status_code=302)
+        self.assertEquals(len(Job.objects.all()), 0)
