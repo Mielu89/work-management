@@ -43,7 +43,6 @@ class JobDetailView(LoginRequiredMixin, MenuMixin, JobParamMixin, generic.Detail
         context[ADMIN_JOB_CONTEXT] = context[ADMIN_JOB_CONTEXT].item_set.filter(text__in = ["Edit","New", "Delete"])
         user = self.request.user
         context['myHours'] = user.userjobs.filter(job = self.object)
-        
         return context
 
 class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):

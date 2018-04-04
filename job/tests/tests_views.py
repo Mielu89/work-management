@@ -8,6 +8,7 @@ from job.views import *
 from job.models import Job, JobWorker
 from worktime.models import WorkTime
 from job.views import ADMIN_JOB_CONTEXT, JOB_PARAM
+from mysite.secret import mapKey
 
 class JobViewsSetUp():
     
@@ -27,7 +28,11 @@ class JobViewsSetUp():
         self.item3 = Item.objects.create(menu = self.menu,
                                          text = 'item3',
                                          views = 'item3view')
-
+        
+        Job.objects.create(jobNr = 0, city = '0', 
+                               street = '0',
+                               zip = 'a')        
+        
 class JobListViewTest(JobViewsSetUp, TestCase):
       
     def test_redirect_if_not_logged_in(self):
@@ -56,7 +61,7 @@ class JobListViewTest(JobViewsSetUp, TestCase):
         resp = self.client.get(reverse('job:joblist'), {'sort': 'all'})
         
         self.assertEquals(resp.status_code, 200)
-        self.assertEquals(len(resp.context['jobList']), 9)
+        self.assertEquals(len(resp.context['jobList']), 10)
         
     def test_list_jobs_sort_current(self):
         
@@ -115,7 +120,7 @@ class JobListViewTest(JobViewsSetUp, TestCase):
           
         resp = self.client.get(reverse('job:joblist'), {'sort': 'future'})
         self.assertEquals(resp.status_code, 200)
-        self.assertEquals(len(resp.context['jobList']), 5)
+        self.assertEquals(len(resp.context['jobList']), 6)
         
     def test_job_list_search(self):
         
@@ -151,3 +156,40 @@ class JobListViewTest(JobViewsSetUp, TestCase):
         resp = self.client.get(reverse('job:joblist'), {'search': 'street2'})
         self.assertEquals(resp.status_code, 200)
         self.assertEquals(len(resp.context['jobList']), 1)
+
+class JobDetailViewTest(JobViewsSetUp, TestCase):
+    
+    def test_redirect_if_not_logged_in(self):
+
+        resp = self.client.get(reverse('job:jobdetail', kwargs={'jobNr': 0}))
+        self.assertRedirects(resp, '/acc/login/?next=/job/detail/0/')
+        
+    def test_correct_template(self):
+
+        self.client.login(username = 'user1', password = '12345')
+        resp = self.client.get(reverse('job:jobdetail', kwargs={'jobNr': 0}))
+        self.assertEquals(resp.context['user'], self.user1)
+        self.assertEquals(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'job/job_detail.html')
+        
+    def test_passing_map_key_to_template(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        
+        resp = self.client.get(reverse('job:jobdetail', kwargs={'jobNr': 0}))
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(resp.context['key'], mapKey)
+        
+    def test_user_hours_in_detail_job_view(self):
+        
+        self.client.login(username = 'user1', password = '12345')
+        job = Job.objects.get(jobNr = 0)
+        jobworker = JobWorker(job = job, user = self.user1)
+        jobworker.save()
+                
+        resp = self.client.get(reverse('job:jobdetail', kwargs={'jobNr': 0}))
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(resp.context['myHours'][0], 
+                          self.user1.userjobs.filter(job = job)[0])
+        self.assertEquals(len(resp.context['myHours']), 1)
+        
