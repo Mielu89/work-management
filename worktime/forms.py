@@ -26,9 +26,10 @@ class AddHoursForm(forms.ModelForm):
             }
     
     def clean(self):
+        
         cleaned_data = super().clean()
         date = cleaned_data.get('date')
-        
+
         if self.jobNr:
             jobDate = Job.objects.get(jobNr=self.jobNr).start
             

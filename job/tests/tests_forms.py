@@ -32,10 +32,10 @@ class JobFormsTest(TestCase):
     def test_JobForm_finish_date_before_start_date(self):
         start_date = timezone.now() + datetime.timedelta(days=1)
         finish_date = timezone.now() 
-        form_date = {'start': start_date, 'finish': finish_date, 
+        form_data = {'start': start_date, 'finish': finish_date, 
                      'city': 'city', 'street': 'street', 'jobNr': 1,
                      'zip': '00-001'}
-        form = JobForm(data = form_date)
+        form = JobForm(data = form_data)
         self.assertFalse(form.is_valid())
         
     def test_JobForm_correct_start_and_finish_date(self):
