@@ -100,14 +100,11 @@ class JobModelTest(TestCase):
                                    worktime1u2.hours,worktime2u2.hours])
         self.assertEquals(job.totalHours(), expected_totalHours)
     
-    def test_ordering_by_jobNr(self):      
-        job1 = Job.objects.get(pk = 1)
-        job2 = Job.objects.get(pk = 2)
-        job3 = Job.objects.get(pk = 3)
+    def test_ordering_by_jobNr(self):     
+
         query = Job.objects.all()
-        self.assertEquals(query[0], job1)
-        self.assertEquals(query[1], job2)
-        self.assertEquals(query[2], job3)
+        self.assertTrue(query[0].jobNr < query[1].jobNr)
+        self.assertTrue(query[1].jobNr < query[2].jobNr)
     
     def test_unique_jobNr(self):
         with self.assertRaises(IntegrityError):
