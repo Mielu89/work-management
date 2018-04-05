@@ -205,4 +205,113 @@ class AddHoursViewTest(WorkTimeViewsSetUp, TestCase):
         
 class MyHoursViewTest(WorkTimeViewsSetUp, TestCase):
     
-    pass
+    def test_redirect_when_user_not_login(self):
+         
+        self.client.logout()
+          
+        resp = self.client.get(reverse('worktime:myhours'))
+        self.assertRedirects(resp, '/acc/login/?next=/hours/myhours/')
+        
+    def test_correct_template(self):
+        
+        resp = self.client.get(reverse('worktime:myhours'))
+        self.assertEquals(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'worktime/my_hours.html')
+        
+    def test_query_fo_search(self):
+        
+        for i in range(1,5):
+            job = Job.objects.create(jobNr = i, city = 'city%s' % i, 
+                                     street = 'street%s' % i,
+                                     zip = '00-00%s' % i)
+            JobWorker.objects.create(job = job, user = self.user)
+            
+        #Searching by jobNr
+        resp = self.client.get(reverse('worktime:myhours'),{'search': '1'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 1)
+        
+        #Searching by city
+        resp = self.client.get(reverse('worktime:myhours'),{'search': 'city1'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 1)
+        
+        #Searching by street
+        resp = self.client.get(reverse('worktime:myhours'),{'search': 'street1'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 1)
+        
+        #Searching by ZIP
+        resp = self.client.get(reverse('worktime:myhours'),{'search': '00-001'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 1)
+        
+    def test_query_sorting_curent(self):
+        
+        for i in range(1,11):
+            if (i%2) == 0:
+                date = datetime.date.today()
+            else:
+                date = None
+            job = Job.objects.create(jobNr = i, city = 'city%s' % i, 
+                                   street = 'street%s' % i,
+                                   zip = '00-00%s' % i,
+                                   start = date)
+            JobWorker.objects.create(job = job, user = self.user)
+          
+        resp = self.client.get(reverse('worktime:myhours'), {'sort': 'current'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 5)
+    
+    def test_query_sorting_complited(self):
+        
+        for i in range(1,11):
+            if (i%2) == 0:
+                date = datetime.date.today()
+            else:
+                date = None
+            job = Job.objects.create(jobNr = i, city = 'city%s' % i, 
+                                   street = 'street%s' % i,
+                                   zip = '00-00%s' % i,
+                                   start = date,
+                                   finish = date)
+            JobWorker.objects.create(job = job, user = self.user)
+          
+        resp = self.client.get(reverse('worktime:myhours'), {'sort': 'complited'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 5)     
+        
+    def test_query_sorting_future(self):
+        
+        for i in range(1,11):
+            if (i%2) == 0:
+                date = datetime.date.today()
+            else:
+                date = None
+            job = Job.objects.create(jobNr = i, city = 'city%s' % i, 
+                                   street = 'street%s' % i,
+                                   zip = '00-00%s' % i,
+                                   start = date)
+            JobWorker.objects.create(job = job, user = self.user)
+    
+        resp = self.client.get(reverse('worktime:myhours'), {'sort': 'future'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 5) 
+        
+    def test_query_sorting_all(self):
+        
+        for i in range(1,11):
+            if (i%2) == 0:
+                date = datetime.date.today()
+            else:
+                date = None
+            job = Job.objects.create(jobNr = i, city = 'city%s' % i, 
+                                   street = 'street%s' % i,
+                                   zip = '00-00%s' % i,
+                                   start = date)
+            JobWorker.objects.create(job = job, user = self.user)
+        
+        #Sort by current jobs    
+        resp = self.client.get(reverse('worktime:myhours'), {'sort': 'all'})
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals(len(resp.context['jobWorker']), 10) 
