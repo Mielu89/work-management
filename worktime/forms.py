@@ -13,8 +13,8 @@ class AddHoursForm(forms.ModelForm):
         self.jobNr = kwargs.pop(JOB_PARAM, None)
         super(AddHoursForm, self).__init__(*args, **kwargs)
         if not self.jobNr:
-            self.fields[JOB_WORKER] = forms.ModelChoiceField(queryset=Job.objects.all())
-
+            self.fields[JOB_WORKER] = forms.ModelChoiceField(queryset=Job.objects.all())       
+        
     class Meta:
         model = WorkTime
         fields = ['date', 'hours', 'description']
@@ -26,12 +26,14 @@ class AddHoursForm(forms.ModelForm):
             }
     
     def clean(self):
-        
+
         cleaned_data = super().clean()
         date = cleaned_data.get('date')
-
+        
         if self.jobNr:
             jobDate = Job.objects.get(jobNr=self.jobNr).start
+            if jobDate == None:
+                raise forms.ValidationError("Dat work don't start yet")
             
         elif not cleaned_data.get(JOB_WORKER).start: 
             raise forms.ValidationError("Dat work don't start yet")
@@ -41,7 +43,6 @@ class AddHoursForm(forms.ModelForm):
               
         if date<jobDate:
             raise forms.ValidationError("Wrong date")
-        
         return cleaned_data
 
 class MyHoursJobEditForm(forms.ModelForm):
