@@ -22,8 +22,8 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from .secret import secretKey
-SECRET_KEY = secretKey
+from . import secret
+SECRET_KEY = secret.secretKey
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,8 +83,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': secret.db_name,
+        'USER': 'postgres',
+        'PASSWORD': secret.db_pass,
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

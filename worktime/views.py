@@ -181,7 +181,7 @@ class EmployeesView(UserPassesTestMixin, generic.ListView):
     def get_queryset(self):
         query = self.model.objects.all().order_by('first_name')
         return query
-    
+
 class EmployeeHoursView(MyHoursView):
     def get_queryset(self, **kwargs):
         user = User.objects.get(id = self.kwargs['pk'])
