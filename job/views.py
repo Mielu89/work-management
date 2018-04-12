@@ -14,7 +14,8 @@ from . import forms
 
 JOB_PARAM = 'jobNr'
 ADMIN_JOB_CONTEXT = 'adminJobMenu'
-JOB_CONTEXT = "JobMenu"
+JOB_CONTEXT = 'JobMenu'
+SORT_CONTEXT = 'active'
 
 class MenuMixin(Menu):
     def get_context_data(self, **kwargs):
@@ -40,7 +41,10 @@ class JobDetailView(LoginRequiredMixin, MenuMixin, JobParamMixin, generic.Detail
         #Pass Google Map Key to JS in template        
         context.update({'key': mapKey})
         
-        context[ADMIN_JOB_CONTEXT] = context[ADMIN_JOB_CONTEXT].item_set.filter(text__in = ["Edit","New", "Delete"])
+        menu = context[ADMIN_JOB_CONTEXT].item_set.filter(
+                                            text__in=["Edit","New", "Delete"])
+        context[ADMIN_JOB_CONTEXT] = menu
+        
         user = self.request.user
         context['myHours'] = user.userjobs.filter(job = self.object)
         return context
@@ -56,9 +60,9 @@ class JobListView(LoginRequiredMixin, MenuMixin, generic.ListView):
         menu = context[ADMIN_JOB_CONTEXT].item_set.filter(text__in = ["New"])
         context[ADMIN_JOB_CONTEXT] = menu
       
-        context['activ'] = self.request.GET.get('sort', None)
-        if context['activ'] == None:
-            context['activ'] = 'current'
+        context[SORT_CONTEXT] = self.request.GET.get('sort', None)
+        if context[SORT_CONTEXT] == None:
+            context[SORT_CONTEXT] = 'current'
         return context
     
     def get_queryset(self, **kwargs):

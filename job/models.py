@@ -14,7 +14,8 @@ class Job(models.Model):
     start = models.DateField(blank = True, null = True)
     finish = models.DateField(blank = True, null = True)
     staff = models.ManyToManyField(User, related_name = 'staff',
-                                   through = 'JobWorker')
+                                   through = 'JobWorker'
+                                   )
 
     def __str__(self):
         return str(self.jobNr) + ' ' + self.street
@@ -27,14 +28,16 @@ class Job(models.Model):
     
 class JobWorker(models.Model):
     job = models.ForeignKey(Job, related_name='jobworkers', 
-                            on_delete = models.CASCADE)
+                            on_delete = models.CASCADE
+                            )
     user = models.ForeignKey(User, related_name = 'userjobs',
-                             on_delete = models.CASCADE)
+                             on_delete = models.CASCADE
+                            )
     
     
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name + \
-                                ' job numer: '+ str(self.job.jobNr)
+                                    ' job numer: '+ str(self.job.jobNr)
             
     def totalHours(self):
         return sum([h.hours for h in self.time.all()])

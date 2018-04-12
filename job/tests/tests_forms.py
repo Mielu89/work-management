@@ -8,7 +8,7 @@ class JobFormsTest(TestCase):
     
     def test_JobForm_fields_labels(self):
         form = JobForm()
-        self.assertEquals(form.fields['jobNr'].label, 'Job numer')
+        self.assertEquals(form.fields['jobNr'].label, 'Job number')
         self.assertEquals(form.fields['city'].label, 'City')
         self.assertEquals(form.fields['street'].label, 'Street')
         self.assertEquals(form.fields['zip'].label, 'Zip')
@@ -18,14 +18,17 @@ class JobFormsTest(TestCase):
     def test_JobForm_fields_widgets(self):
         form = JobForm()
         self.assertEquals(type(form.fields['start'].widget), 
-                          forms.SelectDateWidget)
+                          forms.SelectDateWidget
+                          )
         self.assertEquals(type(form.fields['finish'].widget), 
-                          forms.SelectDateWidget)
+                          forms.SelectDateWidget
+                          )
         
     def test_JobForm_finish_date_and_no_start_date(self):
         date = timezone.now()
         form_data = {'finish': date, 'city': 'city', 'street': 'street', 
-                     'jobNr': 1, 'zip': '00-001'}
+                     'jobNr': 1, 'zip': '00-001'
+                    }
         form = JobForm(data = form_data)
         self.assertFalse(form.is_valid())
          
@@ -34,7 +37,8 @@ class JobFormsTest(TestCase):
         finish_date = timezone.now() 
         form_data = {'start': start_date, 'finish': finish_date, 
                      'city': 'city', 'street': 'street', 'jobNr': 1,
-                     'zip': '00-001'}
+                     'zip': '00-001'
+                    }
         form = JobForm(data = form_data)
         self.assertFalse(form.is_valid())
         
@@ -43,6 +47,7 @@ class JobFormsTest(TestCase):
         finish_date = datetime.date.today() + datetime.timedelta(days=1)
         form_data = {'start': start_date, 'finish': finish_date,
                      'city': 'city', 'street': 'street', 'jobNr': 1,
-                     'zip': '00-001'}
+                     'zip': '00-001'
+                     }
         form = JobForm(data = form_data)
         self.assertTrue(form.is_valid())

@@ -33,10 +33,10 @@ class AddHoursForm(forms.ModelForm):
         if self.jobNr:
             jobDate = Job.objects.get(jobNr=self.jobNr).start
             if jobDate == None:
-                raise forms.ValidationError("Dat work don't start yet")
+                raise forms.ValidationError("This work don't start yet")
             
         elif not cleaned_data.get(JOB_WORKER).start: 
-            raise forms.ValidationError("Dat work don't start yet")
+            raise forms.ValidationError("This work don't start yet")
                 
         else:
             jobDate = cleaned_data.get(JOB_WORKER).start
@@ -51,6 +51,6 @@ class MyHoursJobEditForm(forms.ModelForm):
         fields = ('date', 'description', 'hours')
         widgets = {
             'date': forms.SelectDateWidget(empty_label=("Choose Year", 
-                                                              "Choose Month", 
-                                                              "Choose Day"))
+                                                        "Choose Month", 
+                                                        "Choose Day"))
             }

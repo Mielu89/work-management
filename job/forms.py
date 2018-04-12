@@ -15,7 +15,7 @@ class JobForm(forms.ModelForm):
                                                           "Choose Day")),            
             }
         labels = {
-            "jobNr" : "Job numer",
+            "jobNr" : "Job number",
             "start" : "Start Not required",
             "finish" : "Finish Not required"
             }
@@ -28,5 +28,6 @@ class JobForm(forms.ModelForm):
             raise forms.ValidationError("Type start date before finish")  
         if finish:
             if finish < start:
-                raise forms.ValidationError("Finish date can't be earlier then the start date.")
+                raise forms.ValidationError(
+                        "Finish date can't be earlier then the start date.")
         return finish

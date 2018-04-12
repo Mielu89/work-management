@@ -1,4 +1,3 @@
-from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 
@@ -14,6 +13,8 @@ from job import models
 from job.views import JOB_PARAM
 from .models import WorkTime
 
+SORT_CONTEXT = 'active'
+
 class MyJobsView(LoginRequiredMixin, generic.ListView):
     template_name = "worktime/myjobs.html"
     model = models.Job
@@ -22,9 +23,9 @@ class MyJobsView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(MyJobsView, self).get_context_data(**kwargs)
       
-        context['activ'] = self.request.GET.get('sort', None)
-        if context['activ'] == None:
-            context['activ'] = 'current'
+        context[SORT_CONTEXT] = self.request.GET.get('sort', None)
+        if context[SORT_CONTEXT] == None:
+            context[SORT_CONTEXT] = 'current'
         return context
         
     def get_queryset(self):
@@ -107,10 +108,10 @@ class MyHoursView(LoginRequiredMixin, generic.ListView):
     
     def get_context_data(self):
         context = super().get_context_data()
-        context['activ'] = self.request.GET.get('sort', None)
+        context[SORT_CONTEXT] = self.request.GET.get('sort', None)
         
-        if not context['activ']:
-            context['activ'] = 'all'
+        if not context[SORT_CONTEXT]:
+            context[SORT_CONTEXT] = 'all'
         
         return context
     

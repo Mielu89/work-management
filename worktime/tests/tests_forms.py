@@ -68,7 +68,7 @@ class AddHoursFormTest(TestCase):
         try:
             form.clean()
         except ValidationError as ve:
-            self.assertEquals(ve.message, "Dat work don't start yet")
+            self.assertEquals(ve.message, "This work don't start yet")
       
     def test_no_jobNr_in_url_and_correct_job(self):
           

@@ -8,7 +8,7 @@ class SignUpForm(forms.ModelForm):
     
     password = forms.CharField(max_length=100, widget=forms.PasswordInput)
     passwordValid = forms.CharField(max_length=100, 
-                                    label = "Comfirm Password",
+                                    label = "Confirm Password",
                                     widget=forms.PasswordInput)
     botcatcher = forms.CharField(required = False,                                  
                                  widget = forms.HiddenInput,
@@ -17,8 +17,8 @@ class SignUpForm(forms.ModelForm):
     class Meta:
         
         model = User
-        fields = ("username", "first_name", "last_name", "email", "password",
-                  "passwordValid")
+        fields = ("username", "first_name", "last_name", 
+                  "email", "password", "passwordValid")
     
     def clean_passwordValid(self):
             
@@ -32,10 +32,10 @@ class SignUpForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('This email already registered')
+            raise forms.ValidationError('This email is already registered')
         return email
     
-    def save(self, commit = True):
+    def save(self, commit=True):
         user = super(SignUpForm, self).save(commit=False)
         user.set_password(self.cleaned_data['password'])
         
